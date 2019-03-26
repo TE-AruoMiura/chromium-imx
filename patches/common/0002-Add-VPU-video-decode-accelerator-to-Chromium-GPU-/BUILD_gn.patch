@@ -1,0 +1,50 @@
+--- b/src/media/gpu/BUILD.gn	2017-06-26 16:05:55.394992430 +0900
++++ src/media/gpu/BUILD.gn	2017-06-26 15:56:55.378992430 +0900
+@@ -2,6 +2,7 @@
+ # Use of this source code is governed by a BSD-style license that can be
+ # found in the LICENSE file.
+ 
++import("//build/config/linux/pkg_config.gni")
+ import("//build/config/features.gni")
+ import("//build/config/ui.gni")
+ import("//media/gpu/args.gni")
+@@ -104,6 +105,15 @@
+   if (is_chromeos && use_v4l2_codec) {
+     defines += [ "USE_V4L2_CODEC" ]
+   }
++  if (arm_use_imx) {
++    defines += [ "IMX_PLATFORM" ]
++  }
++}
++
++if (arm_use_imx) {
++  pkg_config("libfslvpuwrap") {
++    packages = [ "libfslvpuwrap" ]
++  } 
+ }
+ 
+ component("gpu") {
+@@ -378,6 +388,23 @@
+       "/DELAYLOAD:mfplat.dll",
+     ]
+   }
++
++  if (arm_use_imx) {
++    sources += [
++      "imx_gl_viv_direct_texture.cc",
++      "imx_gl_viv_direct_texture.h",
++      "imxvpucodec_fslwrapper.c",
++      "imxvpucodec.h",
++      "imxvpucodec_platform_chromium.cc",
++      "imxvpucodec_platform_chromium.h",
++      "imxvpucodec_platform.h",
++      "imxvpu_video_decode_accelerator.cc",
++      "imxvpu_video_decode_accelerator.h",      
++    ]
++    libs += [
++        "fslvpuwrap",
++    ]
++  }
+ }
+ 
+ # TODO(watk): Run this on bots. http://crbug.com/461437

@@ -1,0 +1,53 @@
+--- b/src/media/gpu/gpu_video_decode_accelerator_factory.cc	2017-06-26 16:05:55.402992430 +0900
++++ src/media/gpu/gpu_video_decode_accelerator_factory.cc	2017-06-26 14:38:02.421719218 +0900
+@@ -14,6 +14,8 @@
+ #include "base/win/windows_version.h"
+ #include "media/gpu/d3d11_video_decode_accelerator_win.h"
+ #include "media/gpu/dxva_video_decode_accelerator_win.h"
++#elif defined(IMX_PLATFORM)
++#include "media/gpu/imxvpu_video_decode_accelerator.h"
+ #elif defined(OS_MACOSX)
+ #include "media/gpu/vt_video_decode_accelerator_mac.h"
+ #elif defined(OS_CHROMEOS)
+@@ -86,6 +88,10 @@ GpuVideoDecodeAcceleratorFactory::GetDecoderCapabilities(
+   capabilities.supported_profiles =
+       DXVAVideoDecodeAccelerator::GetSupportedProfiles(gpu_preferences,
+                                                        workarounds);
++#elif defined(IMX_PLATFORM)
++  capabilities.supported_profiles =
++      ImxVpuVideoDecodeAccelerator::GetSupportedProfiles();
++  capabilities.flags = media::VideoDecodeAccelerator::Capabilities::NEEDS_ALL_PICTURE_BUFFERS_TO_DECODE;
+ #elif defined(OS_CHROMEOS)
+   VideoDecodeAccelerator::SupportedProfiles vda_profiles;
+ #if defined(USE_V4L2_CODEC)
+@@ -138,6 +144,9 @@ GpuVideoDecodeAcceleratorFactory::CreateVDA(
+     &GpuVideoDecodeAcceleratorFactory::CreateD3D11VDA,
+     &GpuVideoDecodeAcceleratorFactory::CreateDXVAVDA,
+ #endif
++#if defined(IMX_PLATFORM)
++    &GpuVideoDecodeAcceleratorFactory::CreateImxVpuVDA,
++#endif
+ #if defined(OS_CHROMEOS) && defined(USE_V4L2_CODEC)
+     &GpuVideoDecodeAcceleratorFactory::CreateV4L2VDA,
+     &GpuVideoDecodeAcceleratorFactory::CreateV4L2SVDA,
+@@ -191,6 +200,20 @@ GpuVideoDecodeAcceleratorFactory::CreateDXVAVDA(
+ }
+ #endif
+ 
++#if defined(IMX_PLATFORM)
++std::unique_ptr<VideoDecodeAccelerator>
++GpuVideoDecodeAcceleratorFactory::CreateImxVpuVDA(
++    const gpu::GpuDriverBugWorkarounds& workarounds,
++    const gpu::GpuPreferences& gpu_preferences) const {
++  std::unique_ptr<VideoDecodeAccelerator> decoder;
++    DVLOG(0) << "Using the i.MX6 VPU decode accelerator";
++    decoder.reset(new ImxVpuVideoDecodeAccelerator(
++        get_gles2_decoder_cb_.Run(),
++        make_context_current_cb_));
++  return decoder;
++}
++#endif
++
+ #if defined(OS_CHROMEOS) && defined(USE_V4L2_CODEC)
+ std::unique_ptr<VideoDecodeAccelerator>
+ GpuVideoDecodeAcceleratorFactory::CreateV4L2VDA(

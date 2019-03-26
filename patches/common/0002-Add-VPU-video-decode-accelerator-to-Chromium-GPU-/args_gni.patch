@@ -1,0 +1,10 @@
+--- b/src/media/gpu/args.gni	2017-06-26 16:05:55.398992430 +0900
++++ src/media/gpu/args.gni	2017-06-26 15:12:00.814992430 +0900
+@@ -9,4 +9,7 @@
+   # Indicates if Video4Linux2 codec is used. This is used for all CrOS
+   # platforms which have v4l2 hardware encoder / decoder.
+   use_v4l2_codec = false
++
++  # Wheter or not the target platform is based on the i.MX source
++  arm_use_imx = true
+ }

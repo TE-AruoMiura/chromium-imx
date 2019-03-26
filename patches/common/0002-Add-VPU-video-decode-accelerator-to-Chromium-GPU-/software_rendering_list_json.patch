@@ -1,0 +1,20 @@
+--- b/src/gpu/config/software_rendering_list.json	2017-06-26 16:05:54.486992430 +0900
++++ src/gpu/config/software_rendering_list.json	2017-06-26 15:22:38.598992430 +0900
+@@ -371,17 +371,6 @@
+       ]
+     },
+     {
+-      "id": 48,
+-      "description": "Accelerated video decode is unavailable on Linux",
+-      "cr_bugs": [137247],
+-      "os": {
+-        "type": "linux"
+-      },
+-      "features": [
+-        "accelerated_video_decode"
+-      ]
+-    },
+-    {
+       "id": 50,
+       "description": "Disable VMware software renderer on older Mesa",
+       "cr_bugs": [145531, 332596, 571899, 629434],
