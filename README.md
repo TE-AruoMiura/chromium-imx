@@ -5,7 +5,7 @@ This repository contains sources which add hardware video decoding support to Ch
 using the Freescale i.MX VPU. They are placed under the BSD 3-clause license. See the
 LICENSE file for details.
 
-These sources are written against Chromium 48.0.2548.0.
+These sources are written against Chromium 59.0.3071.135.
 
 
 Prerequisites
@@ -25,6 +25,7 @@ Patching Chromium
 
 1. Copy the contents of src/ to the Chromium source tree.
 2. Apply all patches from patches/common/ in the source tree which are not version specific.
-3. If you are using a Chromium build that has already been patched with ozone-wayland, also apply
-   the patches in patches/wayland/ . Note that it patches ozone-wayland files.
+3. ~~If you are using a Chromium build that has already been patched with ozone-wayland, also apply~~
+   ~~the patches in patches/wayland/ . Note that it patches ozone-wayland files.~~
+   wayland patch not checked.
 4. Build Chromium. chromium://gpu should show video decoding as "Accelerated".
